@@ -111,7 +111,12 @@ export const App: React.FC = () => {
     }
 
     for (const item of data.items) {
-      const timestamp = item.published ?? item.updated;
+      if (!item.published) {
+        continue;
+      }
+
+      const timestamp = new Date(item.published);
+
       if (!timestamp) {
         continue;
       }
@@ -119,7 +124,7 @@ export const App: React.FC = () => {
       const month = timestamp.toLocaleString("default", {
         month: "long",
       }) as Month;
-      const date = timestamp.getDate() - 1;
+      const date = new Date(timestamp).getDate() - 1;
 
       if (!counts[month][date]) {
         counts[month][date] = [];
@@ -148,7 +153,9 @@ export const App: React.FC = () => {
   const oldest = useMemo(() => {
     let oldest = Date.now();
     for (const item of data?.items ?? []) {
-      const timestamp = (item.published ?? item.updated)?.getTime();
+      const timestamp = item.published
+        ? new Date(item.published)?.getTime()
+        : null;
       if (timestamp && timestamp < oldest) {
         oldest = timestamp;
       }

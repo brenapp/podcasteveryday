@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "podcast-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-02-25",
+  "kv_namespaces": [
+    {
+      "binding": "feeds",
+      "id": "b9ec0db9832a439eb6229b49c13ee582"
+    }
+  ],
+  "routes": [
+    {
+      "custom_domain": true,
+      "pattern": "podcast-api.bren.app"
+    }
+  ],
+  "minify": true
+}

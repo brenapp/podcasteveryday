@@ -39,6 +39,11 @@ jobs:
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Deploy API Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: ./workers/podcast-api
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
