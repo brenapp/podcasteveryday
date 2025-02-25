@@ -4,6 +4,7 @@ import { Spinner } from "./components/Spinner";
 import { PodcastPreview } from "./components/Preview";
 import { FeedItem } from "@rowanmanning/feed-parser/lib/feed/item/base";
 import { usePodcastFeed } from "./hooks/rss";
+import { useViewTransition } from "use-view-transitions/react";
 
 const suggestions = [
   // A Problem Squared
@@ -51,6 +52,29 @@ const TOTAL_DAYS = Object.values(DAY_COUNTS).reduce((a, b) => a + b, 0);
 export const App: React.FC = () => {
   // RSS
   const [rss, setRss] = useState<string>(initial);
+
+  const { startViewTransition } = useViewTransition();
+  const transitionRss = useCallback(
+    (url: string) => {
+      startViewTransition(() => {
+        window.history.pushState(null, "", `?rss=${encodeURIComponent(url)}`);
+        setRss(url);
+      });
+    },
+    [startViewTransition]
+  );
+
+  // Handle back button
+  useMemo(() => {
+    const handlePopState = () => {
+      const rss = new URLSearchParams(window.location.search).get("rss") ?? "";
+      setRss(rss);
+    };
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
   const isValid = useMemo(() => {
     try {
       const url = new URL(rss);
@@ -149,13 +173,13 @@ export const App: React.FC = () => {
           onBlur={onBlur}
         />
       </header>
-      {rss.length < 1 ? (
+      {rss.length < 1 && !isFetching ? (
         <section>
           <h3>Or, try these!</h3>
           {suggestions.map((url) => (
             <PodcastPreview key={url} url={url}>
               <div className="actions">
-                <button onClick={() => setRss(url)}>
+                <button onClick={() => transitionRss(url)}>
                   <span>Use this feed</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
