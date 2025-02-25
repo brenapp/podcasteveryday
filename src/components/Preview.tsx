@@ -1,10 +1,18 @@
-import { Feed } from "@rowanmanning/feed-parser/lib/feed/base";
+import { usePodcastFeed } from "../hooks/rss";
 
 export type PodcastPreviewProps = {
-  feed: Feed;
+  url: string;
 };
 
-export const PodcastPreview: React.FC<PodcastPreviewProps> = ({ feed }) => {
+export const PodcastPreview: React.FC<
+  React.PropsWithChildren<PodcastPreviewProps>
+> = ({ url, children }) => {
+  const { data: feed } = usePodcastFeed(url, {});
+
+  if (!feed) {
+    return null;
+  }
+
   return (
     <section className="preview">
       <aside>
@@ -14,6 +22,7 @@ export const PodcastPreview: React.FC<PodcastPreviewProps> = ({ feed }) => {
         <h3>{feed.title}</h3>
         <p>{feed.description}</p>
         {feed.url ? <a href={feed.url}>{feed.url}</a> : null}
+        {children}
       </div>
     </section>
   );

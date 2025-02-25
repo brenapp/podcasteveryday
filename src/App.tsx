@@ -1,10 +1,17 @@
-import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { Month } from "./components/Month";
 import { Spinner } from "./components/Spinner";
-import { parseFeed } from "@rowanmanning/feed-parser";
 import { PodcastPreview } from "./components/Preview";
 import { FeedItem } from "@rowanmanning/feed-parser/lib/feed/item/base";
+import { usePodcastFeed } from "./hooks/rss";
+
+const suggestions = [
+  // A Problem Squared
+  "https://anchor.fm/s/eb804d78/podcast/rss",
+
+  // Lateral with Tom Scott
+  "https://feeds.megaphone.fm/lateralcast",
+];
 
 const initial = new URLSearchParams(window.location.search).get("rss") ?? "";
 
@@ -55,19 +62,8 @@ export const App: React.FC = () => {
 
   const onBlur = useCallback(() => {}, []);
 
-  const { data, isFetching, isError, error } = useQuery({
-    queryKey: ["rss", rss],
-    queryFn: async () => {
-      if (!isValid) {
-        return null;
-      }
-
-      const response = await fetch(rss);
-      const xml = await response.text();
-      return parseFeed(xml);
-    },
-    enabled: isValid,
-    refetchOnWindowFocus: false,
+  const { data, isFetching, isError, error } = usePodcastFeed(rss, {
+    enabled: rss.length > 0,
   });
 
   const publishedDates = useMemo(() => {
@@ -142,8 +138,7 @@ export const App: React.FC = () => {
   return (
     <>
       <header>
-        <h2>Podcast Every Day</h2>
-        <p>To begin, enter the RSS feed of a podcast below.</p>
+        <h3>Enter a Podcast RSS feed below.</h3>
         <input
           className="search"
           type="url"
@@ -154,11 +149,39 @@ export const App: React.FC = () => {
           onBlur={onBlur}
         />
       </header>
+      {rss.length < 1 ? (
+        <section>
+          <h3>Or, try these!</h3>
+          {suggestions.map((url) => (
+            <PodcastPreview key={url} url={url}>
+              <div className="actions">
+                <button onClick={() => setRss(url)}>
+                  <span>Use this feed</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </PodcastPreview>
+          ))}
+        </section>
+      ) : null}
       <Spinner show={rss.length > 0 && isFetching} />
       {isError && !isFetching ? <p className="error">{error.message}</p> : null}
       {data ? (
         <>
-          <PodcastPreview feed={data} />
+          <PodcastPreview url={rss} />
           <section className="callout">
             <p>
               Since {oldest.toLocaleDateString()}, <strong>{data.title}</strong>{" "}

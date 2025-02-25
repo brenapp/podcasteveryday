@@ -158,6 +158,24 @@ img {
   gap: 1rem;
 }
 
+.preview .actions {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.preview .actions button {
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.preview .actions button svg {
+  margin-right: 0.5rem;
+  max-height: 24px;
+}
+
 .month {
   overflow-y: auto;
 }
