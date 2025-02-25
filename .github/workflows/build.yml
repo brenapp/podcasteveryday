@@ -44,6 +44,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: "workers/podcast-api"
+          wranglerVersion: 3.109.3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
