@@ -137,6 +137,8 @@ export const App: React.FC = () => {
     return new Date(oldest);
   }, [data]);
 
+  const percentage = useMemo(() => (100 * totalDays) / TOTAL_DAYS, [totalDays]);
+
   return (
     <>
       <header>
@@ -157,13 +159,31 @@ export const App: React.FC = () => {
       {data ? (
         <>
           <PodcastPreview feed={data} />
-          <section className="callout-section">
+          <section className="callout">
             <p>
               Since {oldest.toLocaleDateString()}, <strong>{data.title}</strong>{" "}
               has published <strong>{data.items.length}</strong> episodes. Those
-              episodes have spanned {totalDays} days out of {TOTAL_DAYS} total
+              episodes have spanned {totalDays} dates out of {TOTAL_DAYS} total
               on the calendar ({((100 * totalDays) / TOTAL_DAYS).toFixed(2)}%).
             </p>
+            <div className="numbers">
+              <figure>
+                <h2>{data.items.length}</h2>
+                <figcaption>Episodes</figcaption>
+              </figure>
+              <figure>
+                <h2>{totalDays}</h2>
+                <figcaption>Total Dates</figcaption>
+              </figure>
+              <figure>
+                <h2>{percentage.toFixed(2)}%</h2>
+                <figcaption>Total Days</figcaption>
+              </figure>
+              <figure>
+                <h2>{oldest.toLocaleDateString()}</h2>
+                <figcaption>Oldest Episode</figcaption>
+              </figure>
+            </div>
           </section>
           <main>
             <Month

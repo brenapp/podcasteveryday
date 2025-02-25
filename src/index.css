@@ -159,7 +159,6 @@ img {
 }
 
 .month {
-  max-height: 420px;
   overflow-y: auto;
 }
 
@@ -201,4 +200,42 @@ img {
 .day[data-highlighted="true"] {
   background-color: #646cff;
   color: #ffffff;
+}
+
+.callout {
+  background: #1a1a1a;
+  padding: 1rem 1.5rem;
+  border-radius: 0.25rem;
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media screen and (min-width: 768px) {
+  .numbers {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (min-width: 1320px) {
+  .numbers {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.numbers figure {
+  text-align: center;
+}
+
+.numbers h2 {
+  font-size: 2.5rem;
+  color: #646cff;
+  margin: 0;
+}
+
+.numbers figcaption {
+  font-style: italic;
+  margin: 0;
 }
