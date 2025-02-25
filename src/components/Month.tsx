@@ -29,7 +29,7 @@ export const Month: React.FC<MonthProps> = ({ title, days, highlighted }) => {
           {title} ({totalDays}/{days} days)
         </span>
         <button className="icon-button" onClick={() => setIsOpen((o) => !o)}>
-          <span>More</span>
+          <span>{isOpen ? "Less" : "More"}</span>
         </button>
       </h3>
       {isOpen ? (
