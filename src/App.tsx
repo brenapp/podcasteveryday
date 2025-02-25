@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Month } from "./components/Month";
 import { Spinner } from "./components/Spinner";
 import { PodcastPreview } from "./components/Preview";
@@ -57,7 +57,6 @@ export const App: React.FC = () => {
   const transitionRss = useCallback(
     (url: string) => {
       startViewTransition(() => {
-        window.history.pushState(null, "", `?rss=${encodeURIComponent(url)}`);
         setRss(url);
       });
     },
@@ -89,6 +88,20 @@ export const App: React.FC = () => {
   const { data, isFetching, isError, error } = usePodcastFeed(rss, {
     enabled: rss.length > 0,
   });
+
+  useEffect(() => {
+    if (data) {
+      document.title = `${data.title} - Podcast Calendar`;
+      window.history.pushState(null, "", `?rss=${encodeURIComponent(rss)}`);
+    }
+  }, [data, rss]);
+
+  useEffect(() => {
+    if (!rss) {
+      document.title = "Podcast Every Day";
+      window.history.pushState(null, "", window.location.pathname);
+    }
+  }, [rss]);
 
   const publishedDates = useMemo(() => {
     const counts: ItemsByDate = {
