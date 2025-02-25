@@ -45,7 +45,13 @@ export const Month: React.FC<MonthProps> = ({ title, days, highlighted }) => {
                     {item.title}
                   </a>
                   &nbsp;
-                  <em>({item.published?.toLocaleDateString()})</em>
+                  <em>
+                    (
+                    {item.published
+                      ? new Date(item.published).toLocaleDateString()
+                      : null}
+                    )
+                  </em>
                 </li>
               ))}
             </ul>
