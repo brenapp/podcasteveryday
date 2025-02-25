@@ -14,7 +14,7 @@ export const PodcastPreview: React.FC<
   }
 
   return (
-    <section className="preview">
+    <section className="preview" style={{ viewTransitionName: "preview-" + url }}>
       <aside>
         <img src={feed.image?.url} alt={feed.image?.title ?? undefined} />
       </aside>
