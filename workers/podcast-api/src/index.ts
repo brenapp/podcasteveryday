@@ -40,7 +40,7 @@ app.get("/api/feed", async (c) => {
     }
 
     await c.env.feeds.put(key, JSON.stringify(feed), {
-      expirationTtl: 60 * 60,
+      expirationTtl: 60 * 60 * 30,
     });
 
     return c.json({ data: feed }, 200, headers);
